@@ -1,8 +1,8 @@
 {
-  "name": "lifeWatcher",
+  "name": "LifeWatcher",
   "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "http://ionicframework.com/",
+  "author": "POD TEAM 12",
+  "homepage": "http://watcher.life/",
   "private": true,
   "scripts": {
     "clean": "ionic-app-scripts clean",
@@ -20,11 +20,13 @@
     "@angular/http": "4.4.4",
     "@angular/platform-browser": "4.4.4",
     "@angular/platform-browser-dynamic": "4.4.4",
-    "@ionic-native/core": "4.3.2",
+    "@ionic-native/camera-preview": "^4.3.2",
+    "@ionic-native/core": "^4.3.2",
     "@ionic-native/splash-screen": "4.3.2",
     "@ionic-native/status-bar": "4.3.2",
     "@ionic/storage": "2.0.1",
-    "cordova-ios": "4.5.2",
+    "cordova-ios": "~4.5.2",
+    "cordova-plugin-camera-preview": "^0.9.0",
     "cordova-plugin-device": "^1.1.4",
     "cordova-plugin-ionic-webview": "^1.1.16",
     "cordova-plugin-splashscreen": "^4.0.3",
@@ -34,23 +36,26 @@
     "ionicons": "3.0.0",
     "rxjs": "5.4.3",
     "sw-toolbox": "3.6.0",
-    "zone.js": "0.8.18"
+    "zone.js": "0.8.18",
+    "cordova-android": "~6.3.0"
   },
   "devDependencies": {
     "@ionic/app-scripts": "3.0.1",
     "typescript": "2.3.4"
   },
-  "description": "An Ionic project",
+  "description": "A smart method to pretect your life",
   "cordova": {
     "plugins": {
       "ionic-plugin-keyboard": {},
       "cordova-plugin-whitelist": {},
       "cordova-plugin-device": {},
       "cordova-plugin-splashscreen": {},
-      "cordova-plugin-ionic-webview": {}
+      "cordova-plugin-ionic-webview": {},
+      "cordova-plugin-camera-preview": {}
     },
     "platforms": [
-      "ios"
+      "ios",
+      "android"
     ]
   }
 }
