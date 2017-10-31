@@ -30,7 +30,7 @@ export class DetectorService {
     }
   }
 
-  writeFile(fileName: string, uploadName:string, fileBlob: any) {
+  writeFile(fileName: string, uploadName:string, fileBlob: any, win, fail) {
     resolveLocalFileSystemURL(this.storageDirectory, (dir) => {
       console.log('Access to the directory granted successfully');
       dir.getFile(fileName, {create: true, replace: true}, (file) => {
@@ -40,7 +40,7 @@ export class DetectorService {
           fileWriter.onwriteend = (e) => {
             console.log("file length:", fileWriter.length);
             console.log('Write completed.',fileName, e);
-            this.uploadFile(fileName, uploadName);
+            this.uploadFile(fileName, uploadName, win, fail);
           };
           fileWriter.write(fileBlob);
         }, () => {
@@ -50,25 +50,25 @@ export class DetectorService {
     });
   }
 
-  detector(imgData) {
+  detector(imgData, win, fail) {
     console.log(this.storageDirectory);
     var uploadName = new Date().getTime().toString() + ".jpeg";
     var fileName = "detector.jpeg";
-    this.writeFile(fileName, uploadName, imgData);
+    this.writeFile(fileName, uploadName, imgData, win, fail);
   }
 
-  public uploadFile(fileName: string, uploadName:string) {
-    var win = function (r) {
-      console.log("Code = " + r.responseCode);
-      console.log("Response = " + r.response);
-      console.log("Sent = " + r.bytesSent);
-    }
-
-    var fail = function (error) {
-      alert("An error has occurred: Code = " + error.code);
-      console.log("upload error source " + error.source);
-      console.log("upload error target " + error.target);
-    }
+  public uploadFile(fileName: string, uploadName:string, win, fail) {
+    // var win = function (r) {
+    //   console.log("Code = " + r.responseCode);
+    //   console.log("Response = " + r.response);
+    //   console.log("Sent = " + r.bytesSent);
+    // }
+    //
+    // var fail = function (error) {
+    //   alert("An error has occurred: Code = " + error.code);
+    //   console.log("upload error source " + error.source);
+    //   console.log("upload error target " + error.target);
+    // }
     let options = new FileUploadOptions();
     options.fileKey = "file";
     options.fileName = fileName;
