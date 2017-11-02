@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Platform } from 'ionic-angular';
-import { Http, Headers, RequestOptions, RequestMethod } from '@angular/http';
+import { Http } from '@angular/http';
 import { File } from '@ionic-native/file';
 
 declare var cordova: any;
@@ -11,14 +11,14 @@ declare const resolveLocalFileSystemURL: any;
 export class DetectorService {
 
   storageDirectory: string = '';
-   url:string = 'http://192.168.1.106:8080/detector';
+   url:string = 'http://watcher.life/rest/api/detection';
 
   constructor(private http:Http, public platform: Platform, private file: File) {
     if (this.platform.is('ios')) {
       this.storageDirectory = cordova.file.tempDirectory;
     }
     else if(this.platform.is('android')) {
-      this.storageDirectory = cordova.file.externalRootDirectory;
+      this.storageDirectory = cordova.file.externalCacheDirectory;
     }
     else {
       // exit otherwise, but you could add further types here e.g. Windows
