@@ -12,6 +12,7 @@ export class DetectorService {
 
   storageDirectory: string = '';
    url:string = 'http://watcher.life/rest/api/detection';
+  // url:string = 'http://192.168.1.106:8080/rest/api/detection';
 
   constructor(private http:Http, public platform: Platform, private file: File) {
     if (this.platform.is('ios')) {
@@ -30,7 +31,7 @@ export class DetectorService {
     }
   }
 
-  writeFile(fileName: string, uploadName:string, fileBlob: any, win, fail) {
+  writeFile(fileName: string, uploadName:string, fileBlob: any, win, fail, email: string, uuid: string) {
     resolveLocalFileSystemURL(this.storageDirectory, (dir) => {
       console.log('Access to the directory granted successfully');
       dir.getFile(fileName, {create: true, replace: true}, (file) => {
@@ -40,7 +41,7 @@ export class DetectorService {
           fileWriter.onwriteend = (e) => {
             console.log("file length:", fileWriter.length);
             console.log('Write completed.',fileName, e);
-            this.uploadFile(fileName, uploadName, win, fail);
+            this.uploadFile(fileName, uploadName, win, fail, email, uuid);
           };
           fileWriter.write(fileBlob);
         }, () => {
@@ -50,14 +51,14 @@ export class DetectorService {
     });
   }
 
-  detector(imgData, win, fail) {
+  detector(imgData, win, fail, email: string, uuid: string) {
     console.log(this.storageDirectory);
     var uploadName = new Date().getTime().toString() + ".jpeg";
     var fileName = "detector.jpeg";
-    this.writeFile(fileName, uploadName, imgData, win, fail);
+    this.writeFile(fileName, uploadName, imgData, win, fail, email, uuid);
   }
 
-  public uploadFile(fileName: string, uploadName:string, win, fail) {
+  public uploadFile(fileName: string, uploadName:string, win, fail, email: string, uuid: string) {
     // var win = function (r) {
     //   console.log("Code = " + r.responseCode);
     //   console.log("Response = " + r.response);
@@ -73,7 +74,8 @@ export class DetectorService {
     options.fileKey = "file";
     options.fileName = fileName;
     options.mimeType = "image/jpeg";
-    options.chunkedMode = false
+    options.chunkedMode = false;
+    options.params = {"email":email, "uuid":uuid};
     let filePath = this.storageDirectory + fileName;
     let fileTransfer = new FileTransfer();
     fileTransfer.upload(filePath, encodeURI(this.url), win, fail, options);

@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { NavController, Platform } from 'ionic-angular';
+import { NavController, NavParams, Platform } from 'ionic-angular';
 import { CameraPreview, CameraPreviewOptions, CameraPreviewPictureOptions } from '@ionic-native/camera-preview';
 import { DetectorService } from '../../services/rest/DetectorService';
 import { NotificationService } from '../../services/device/NotificationService';
 import { Subscription } from "rxjs";
 import { TimerObservable } from "rxjs/observable/TimerObservable";
+import { Device } from '@ionic-native/device';
 
 @Component({
   selector: 'page-home',
@@ -15,8 +16,8 @@ export class HomePage {
 
   private subscription: Subscription;
 
-  constructor(public navCtrl: NavController, public platform: Platform, public cameraPreview: CameraPreview,
-              public detectorService:DetectorService, public notification: NotificationService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public cameraPreview: CameraPreview,
+              public detectorService:DetectorService, public notification: NotificationService, private device: Device) {
     this.platform.ready().then(() => {
       var width = 0;
       var height = 0;
@@ -69,8 +70,21 @@ export class HomePage {
       console.log("Response = " + r.response);
       console.log("Sent = " + r.bytesSent);
       var result = JSON.parse(r.response);
-      console.log(JSON.stringify(result.results[0].predictions[0].labels));
-      alert("American Black Bear : " + result.results[0].predictions[0].labels["American Black Bear"])
+      var value;
+      var showvalue = JSON.stringify(result.results[0].predictions[0].labels);
+      value = result.results[0].predictions[0].labels;
+      for (var key in value) {
+        console.log("key value", key, value[key]);
+        if(parseFloat(value[key]) > parseFloat("0.5")) {
+          // console.log(parseFloat(value[key]))
+          // console.log(value[key]);
+          // notify.notify_warning(value);
+          alert(showvalue);
+          break;
+        }
+      }
+      // console.log(JSON.stringify(result.results[0].predictions[0].labels));
+      // alert("American Black Bear : " + result.results[0].predictions[0].labels["American Black Bear"])
     };
 
     var fail = function (error) {
@@ -98,7 +112,7 @@ export class HomePage {
           const byteArray = new Uint8Array(byteNumbers);
 
           const blob: Blob = new Blob([byteArray], {type: 'image/jpeg'});
-          detectorService.detector(blob, win, fail);
+          detectorService.detector(blob, win, fail, this.navParams.get("email"), this.device.uuid);
         });
       } else if(this.platform.is('android')) {
         this.cameraPreview.takePicture(option).then((imgData) => {
@@ -112,7 +126,7 @@ export class HomePage {
           const byteArray = new Uint8Array(byteNumbers);
 
           const blob: Blob = new Blob([byteArray], {type: 'image/jpeg'});
-          detectorService.detector(blob, win, fail);
+          detectorService.detector(blob, win, fail, this.navParams.get("email"), this.device.uuid);
         });
       }
 

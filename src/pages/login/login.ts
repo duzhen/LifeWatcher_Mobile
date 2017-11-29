@@ -24,7 +24,7 @@ export class LoginPage {
 
   logIn(username: HTMLInputElement) {
     console.log(username.value);
-    this.navCtrl.push(HomePage);
+    this.navCtrl.push(HomePage, {"email":username.value});
   }
 
 }
